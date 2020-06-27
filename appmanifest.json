@@ -1,6 +1,6 @@
 {
-	"name": "Multiplayer pong",
-	"short_name": "Multiplayer pong",
+	"name": "Multiplayer game example",
+	"short_name": "Multiplayer game example",
 	"description": "",
 	"start_url": "index.html",
 	"display": "fullscreen",

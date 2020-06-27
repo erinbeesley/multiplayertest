@@ -546,18 +546,6 @@ self["C3_Shaders"] = {};
 
 "use strict";C3.Plugins.Arr.Exps={At(a,b,c){return this.At(a,b||0,c||0)},Width(){return this._cx},Height(){return this._cy},Depth(){return this._cz},CurX(){return this._GetForX()},CurY(){return this._GetForY()},CurZ(){return this._GetForZ()},CurValue(){return this.At(this._GetForX(),this._GetForY(),this._GetForZ())},Front(){return this.At(0,0,0)},Back(){return this.At(this._cx-1,0,0)},IndexOf(a){const b=this._arr;for(let c=0,d=this._cx;c<d;++c)if(b[c][0][0]===a)return c;return-1},LastIndexOf(a){const b=this._arr;for(let c=this._cx-1;0<=c;--c)if(b[c][0][0]===a)return c;return-1},AsJSON(){return this.GetAsJsonString()}};
 
-"use strict";C3.Plugins.TiledBg=class extends C3.SDKPluginBase{constructor(a){super(a)}Release(){super.Release()}};
-
-"use strict";C3.Plugins.TiledBg.Type=class extends C3.SDKTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){this.GetImageInfo().LoadAsset(this._runtime)}LoadTextures(a){return this.GetImageInfo().LoadStaticTexture(a,{sampling:this._runtime.GetSampling(),isTiled:!0})}ReleaseTextures(){this.GetImageInfo().ReleaseTexture()}};
-
-"use strict";{const a=C3.New(C3.Quad),b=C3.New(C3.Rect),c=C3.New(C3.Quad);C3.Plugins.TiledBg.Instance=class extends C3.SDKWorldInstanceBase{constructor(a,b){super(a),this._imageOffsetX=0,this._imageOffsetY=0,this._imageScaleX=1,this._imageScaleY=1,this._imageAngle=0,this._ownImageInfo=null,b&&(this.GetWorldInfo().SetVisible(!!b[0]),this._imageOffsetX=b[2],this._imageOffsetY=b[3],this._imageScaleX=b[4],this._imageScaleY=b[5],this._imageAngle=C3.toRadians(b[6]))}Release(){this._ReleaseOwnImage(),super.Release()}_ReleaseOwnImage(){this._ownImageInfo&&(this._ownImageInfo.Release(),this._ownImageInfo=null)}Draw(d){var e=Math.round;const f=this.GetCurrentImageInfo(),g=f.GetTexture();if(!g)return;const h=this.GetWorldInfo();let i=h.GetBoundingQuad();d.SetTexture(g);const j=f.GetWidth(),k=f.GetHeight(),l=this._imageOffsetX/j,m=this._imageOffsetY/k;if(b.set(0,0,h.GetWidth()/(j*this._imageScaleX),h.GetHeight()/(k*this._imageScaleY)),b.offset(-l,-m),this._runtime.IsPixelRoundingEnabled()){const b=e(h.GetX())-h.GetX(),c=e(h.GetY())-h.GetY();a.copy(i),a.offset(b,c),i=a}0===this._imageAngle?d.Quad3(i,b):(c.setFromRotatedRect(b,-this._imageAngle),d.Quad4(i,c))}GetCurrentImageInfo(){return this._ownImageInfo||this._objectClass.GetImageInfo()}_SetImageOffsetX(a){this._imageOffsetX===a||(this._imageOffsetX=a,this._runtime.UpdateRender())}_GetImageOffsetX(){return this._imageOffsetX}_SetImageOffsetY(a){this._imageOffsetY===a||(this._imageOffsetY=a,this._runtime.UpdateRender())}_GetImageOffsetY(){return this._imageOffsetY}_SetImageScaleX(a){this._imageScaleX===a||(this._imageScaleX=a,this._runtime.UpdateRender())}_GetImageScaleX(){return this._imageScaleX}_SetImageScaleY(a){this._imageScaleY===a||(this._imageScaleY=a,this._runtime.UpdateRender())}_GetImageScaleY(){return this._imageScaleY}_SetImageAngle(b){this._imageAngle===b||(this._imageAngle=b,this._runtime.UpdateRender())}_GetImageAngle(){return this._imageAngle}GetPropertyValueByIndex(a){return 2===a?this._GetImageOffsetX():3===a?this._GetImageOffsetY():4===a?this._GetImageScaleX():5===a?this._GetImageScaleY():6===a?this._GetImageAngle():void 0}SetPropertyValueByIndex(a,b){2===a?this._SetImageOffsetX(b):3===a?this._SetImageOffsetY(b):4===a?this._SetImageScaleX(b):5===a?this._SetImageScaleY(b):6===a?this._SetImageAngle(b):void 0}GetScriptInterfaceClass(){return ITiledBackgroundInstance}};const d=new WeakMap;self.ITiledBackgroundInstance=class extends IWorldInstance{constructor(){super(),d.set(this,IInstance._GetInitInst().GetSdkInstance())}set imageOffsetX(a){d.get(this)._SetImageOffsetX(a)}get imageOffsetX(){return d.get(this)._GetImageOffsetX()}set imageOffsetY(a){d.get(this)._SetImageOffsetY(a)}get imageOffsetY(){return d.get(this)._GetImageOffsetY()}set imageScaleX(a){d.get(this)._SetImageScaleX(a)}get imageScaleX(){return d.get(this)._GetImageScaleX()}set imageScaleY(a){d.get(this)._SetImageScaleY(a)}get imageScaleY(){return d.get(this)._GetImageScaleY()}set imageAngle(b){d.get(this)._SetImageAngle(b)}get imageAngle(){return d.get(this)._GetImageAngle()}set imageAngleDegrees(b){d.get(this)._SetImageAngle(C3.toRadians(b))}get imageAngleDegrees(){return C3.toDegrees(d.get(this)._GetImageAngle())}}}
-
-"use strict";C3.Plugins.TiledBg.Cnds={OnURLLoaded(){return!0},OnURLFailed(){return!0}};
-
-"use strict";C3.Plugins.TiledBg.Acts={SetImageOffsetX(a){this._SetImageOffsetX(a)},SetImageOffsetY(a){this._SetImageOffsetY(a)},SetImageScaleX(a){this._SetImageScaleX(a/100)},SetImageScaleY(a){this._SetImageScaleY(a/100)},SetImageAngle(b){this._SetImageAngle(C3.toRadians(b))},SetEffect(a){this.GetWorldInfo().SetBlendMode(a),this._runtime.UpdateRender()},async LoadURL(a){if(!(this._ownImageInfo&&this._ownImageInfo.GetURL()===a)){const b=this._runtime,c=C3.New(C3.ImageInfo);if(await c.LoadDynamicAsset(b,a),!c.IsLoaded())return void this.Trigger(C3.Plugins.TiledBg.Cnds.OnURLFailed);if(this.WasReleased())return c.Release(),null;const d=await c.LoadStaticTexture(b.GetWebGLRenderer(),{sampling:this._runtime.GetSampling(),isTiled:!0});return d?this.WasReleased()?void c.Release():void(this._ReleaseOwnImage(),this._ownImageInfo=c,b.UpdateRender(),await this.TriggerAsync(C3.Plugins.TiledBg.Cnds.OnURLLoaded)):void 0}}};
-
-"use strict";C3.Plugins.TiledBg.Exps={ImageWidth(){return this.GetCurrentImageInfo().GetWidth()},ImageHeight(){return this.GetCurrentImageInfo().GetHeight()},ImageOffsetX(){return this._imageOffsetX},ImageOffsetY(){return this._imageOffsetY},ImageScaleX(){return 100*this._imageScaleX},ImageScaleY(){return 100*this._imageScaleY},ImageAngle(){return C3.toDegrees(this._imageAngle)}};
-
 "use strict";C3.Plugins.Multiplayer=class extends C3.SDKPluginBase{constructor(a){super(a)}Release(){super.Release()}};
 
 "use strict";C3.Plugins.Multiplayer.Type=class extends C3.SDKTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
@@ -596,29 +584,41 @@ self["C3_Shaders"] = {};
 
 "use strict";{function a(a){return a=Math.floor(a),8===a?"backspace":9===a?"tab":13===a?"enter":16===a?"shift":17===a?"control":18===a?"alt":19===a?"pause":20===a?"capslock":27===a?"esc":33===a?"pageup":34===a?"pagedown":35===a?"end":36===a?"home":37===a?"\u2190":38===a?"\u2191":39===a?"\u2192":40===a?"\u2193":45===a?"insert":46===a?"del":91===a?"left window key":92===a?"right window key":93===a?"select":96===a?"numpad 0":97===a?"numpad 1":98===a?"numpad 2":99===a?"numpad 3":100===a?"numpad 4":101===a?"numpad 5":102===a?"numpad 6":103===a?"numpad 7":104===a?"numpad 8":105===a?"numpad 9":106===a?"numpad *":107===a?"numpad +":109===a?"numpad -":110===a?"numpad .":111===a?"numpad /":112===a?"F1":113===a?"F2":114===a?"F3":115===a?"F4":116===a?"F5":117===a?"F6":118===a?"F7":119===a?"F8":120===a?"F9":121===a?"F10":122===a?"F11":123===a?"F12":144===a?"numlock":145===a?"scroll lock":186===a?";":187===a?"=":188===a?",":189===a?"-":190===a?".":191===a?"/":192===a?"'":219===a?"[":220===a?"\\":221===a?"]":222===a?"#":223===a?"`":String.fromCharCode(a)}C3.Plugins.Keyboard.Exps={LastKeyCode(){return this._triggerWhich},StringFromKeyCode(b){return a(b)},TypedKey(){return this._triggerTypedKey}}}
 
-"use strict";C3.Behaviors.solid=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
+"use strict";C3.Plugins.Browser=class extends C3.SDKPluginBase{constructor(a){super(a)}Release(){super.Release()}};
 
-"use strict";C3.Behaviors.solid.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
+"use strict";C3.Plugins.Browser.Type=class extends C3.SDKTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
 
-"use strict";{const a=new Set;C3.Behaviors.solid.Instance=class extends C3.SDKBehaviorInstanceBase{constructor(a,b){super(a),this.SetEnabled(!0),b&&(this.SetEnabled(b[0]),this.SetTags(b[1]))}Release(){super.Release()}SetEnabled(a){this._inst._SetSolidEnabled(!!a)}IsEnabled(){return this._inst._IsSolidEnabled()}SetTags(a){const b=this._inst.GetSavedDataMap();if(!a.trim())return void b.delete("solidTags");let c=b.get("solidTags");c||(c=new Set,b.set("solidTags",c)),c.clear();for(const b of a.split(" "))b&&c.add(b.toLowerCase())}GetTags(){return this._inst.GetSavedDataMap().get("solidTags")||a}SaveToJson(){return{"e":this.IsEnabled()}}LoadFromJson(a){this.SetEnabled(a["e"])}GetPropertyValueByIndex(a){return a===0?this.IsEnabled():void 0}SetPropertyValueByIndex(a,b){a===0?this.SetEnabled(b):void 0}GetDebuggerProperties(){return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:"behaviors.solid.properties.enabled.name",value:this.IsEnabled(),onedit:(a)=>this.SetEnabled(a)}]}]}}}
+"use strict";{C3.Plugins.Browser.Instance=class extends C3.SDKInstanceBase{constructor(a){super(a,"browser"),this._initLocationStr="",this._isOnline=!1,this._referrer="",this._docTitle="",this._isCookieEnabled=!1,this._screenWidth=0,this._screenHeight=0,this._windowOuterWidth=0,this._windowOuterHeight=0,this._isScirraArcade=!1,this.AddDOMMessageHandlers([["online-state",(a)=>this._OnOnlineStateChanged(a)],["backbutton",()=>this._OnBackButton()],["sw-message",(a)=>this._OnSWMessage(a)],["hashchange",(a)=>this._OnHashChange(a)]]);const b=this.GetRuntime().Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(b,"afterfirstlayoutstart",()=>this._OnAfterFirstLayoutStart()),C3.Disposable.From(b,"window-resize",()=>this._OnWindowResize()),C3.Disposable.From(b,"suspend",()=>this._OnSuspend()),C3.Disposable.From(b,"resume",()=>this._OnResume())),this._runtime.AddLoadPromise(this.PostToDOMAsync("get-initial-state",{"exportType":this._runtime.GetExportType()}).then((a)=>{this._initLocationStr=a["location"],this._isOnline=a["isOnline"],this._referrer=a["referrer"],this._docTitle=a["title"],this._isCookieEnabled=a["isCookieEnabled"],this._screenWidth=a["screenWidth"],this._screenHeight=a["screenHeight"],this._windowOuterWidth=a["windowOuterWidth"],this._windowOuterHeight=a["windowOuterHeight"],this._isScirraArcade=a["isScirraArcade"]}))}Release(){super.Release()}_OnAfterFirstLayoutStart(){this.PostToDOM("ready-for-sw-messages")}async _OnOnlineStateChanged(a){const b=!!a["isOnline"];this._isOnline===b||(this._isOnline=b,this._isOnline?await this.TriggerAsync(C3.Plugins.Browser.Cnds.OnOnline):await this.TriggerAsync(C3.Plugins.Browser.Cnds.OnOffline))}async _OnWindowResize(){await this.TriggerAsync(C3.Plugins.Browser.Cnds.OnResize)}_OnSuspend(){this.Trigger(C3.Plugins.Browser.Cnds.OnPageHidden)}_OnResume(){this.Trigger(C3.Plugins.Browser.Cnds.OnPageVisible)}async _OnBackButton(){await this.TriggerAsync(C3.Plugins.Browser.Cnds.OnBackButton)}_OnSWMessage(a){const b=a["type"];"downloading-update"===b?this.Trigger(C3.Plugins.Browser.Cnds.OnUpdateFound):"update-ready"===b||"update-pending"===b?this.Trigger(C3.Plugins.Browser.Cnds.OnUpdateReady):"offline-ready"===b&&this.Trigger(C3.Plugins.Browser.Cnds.OnOfflineReady)}_OnHashChange(a){this._initLocationStr=a["location"],this.Trigger(C3.Plugins.Browser.Cnds.OnHashChange)}GetDebuggerProperties(){return[{title:"plugins.browser.name",properties:[{name:"plugins.browser.debugger.user-agent",value:navigator.userAgent},{name:"plugins.browser.debugger.is-online",value:this._isOnline},{name:"plugins.browser.debugger.is-fullscreen",value:this._runtime.GetCanvasManager().IsDocumentFullscreen()}]}]}}}
 
-"use strict";C3.Behaviors.solid.Cnds={IsEnabled(){return this.IsEnabled()}};
+"use strict";C3.Plugins.Browser.Cnds={IsOnline(){return this._isOnline},OnOnline(){return!0},OnOffline(){return!0},OnResize(){return!0},CookiesEnabled(){return this._isCookieEnabled},IsFullscreen(){return this._runtime.GetCanvasManager().IsDocumentFullscreen()},OnBackButton(){return!0},IsPortraitLandscape(a){const b=this._runtime.GetCanvasManager().GetLastWidth(),c=this._runtime.GetCanvasManager().GetLastHeight(),d=b<=c?0:1;return d===a},OnUpdateFound(){return!0},OnUpdateReady(){return!0},OnOfflineReady(){return!0},OnHashChange(){return!0},PageVisible(){return!this._runtime.IsSuspended()},OnPageHidden(){return!0},OnPageVisible(){return!0},HasJava(){return!1},IsDownloadingUpdate(){return!1},OnMenuButton(){return!1},OnSearchButton(){return!1},IsMetered(){return!1},IsCharging(){return!0},SupportsFullscreen(){return!0}};
 
-"use strict";C3.Behaviors.solid.Acts={SetEnabled(a){this.SetEnabled(a)},SetTags(a){this.SetTags(a)}};
+"use strict";{const ORIENTATIONS=["portrait","landscape","portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"];C3.Plugins.Browser.Acts={Alert(a){this.PostToDOM("alert",{"message":a.toString()})},Close(){this._isScirraArcade||(this._runtime.IsDebug()?C3Debugger.CloseWindow():this.PostToDOM("close"))},Focus(){this.PostToDOM("set-focus",{"isFocus":!0})},Blur(){this.PostToDOM("set-focus",{"isFocus":!1})},GoBack(){this._isScirraArcade||this.PostToDOM("navigate",{"type":"back"})},GoForward(){this._isScirraArcade||this.PostToDOM("navigate",{"type":"forward"})},GoHome(){this._isScirraArcade||this.PostToDOM("navigate",{"type":"home"})},Reload(){this._isScirraArcade||(this._runtime.IsDebug()?this._runtime.PostToDebugger({"type":"reload"}):this.PostToDOM("navigate",{"type":"reload"}))},GoToURL(a,b){this._PostToDOMMaybeSync("navigate",{"type":"url","url":a,"target":b,"exportType":this._runtime.GetExportType()})},GoToURLWindow(a,b){this._PostToDOMMaybeSync("navigate",{"type":"new-window","url":a,"tag":b,"exportType":this._runtime.GetExportType()})},RequestFullScreen(a,b){2<=a&&(a+=1),6===a&&(a=2),1===a&&(a=0);const c=C3.CanvasManager._FullscreenModeNumberToString(a);this._runtime.GetCanvasManager().SetDocumentFullscreenMode(c),this._PostToDOMMaybeSync("request-fullscreen",{"navUI":b})},CancelFullScreen(){this._PostToDOMMaybeSync("exit-fullscreen")},Vibrate(a){const b=a.split(",");for(let c=0,d=b.length;c<d;++c)b[c]=parseInt(b[c],10);this._PostToDOMMaybeSync("vibrate",{"pattern":b})},async InvokeDownload(a,b){if(b){const c=await this._runtime.GetAssetManager().GetProjectFileUrl(a);this._runtime.InvokeDownload(c,b)}},InvokeDownloadString(a,b,c){if(c){const d=`data:${b},${encodeURIComponent(a)}`;this._runtime.InvokeDownload(d,c)}},ConsoleLog(a,b){b=b.toString(),0===a?console.log(b):1===a?console.warn(b):2==a&&console.error(b)},ConsoleGroup(a){console.group(a)},ConsoleGroupEnd(){console.groupEnd()},ExecJs(jsStr){try{eval(jsStr)}catch(a){console.error("Error executing JavaScript: ",a)}},LockOrientation(a){if(a=Math.floor(a),!(0>a||a>=ORIENTATIONS.length)){const b=ORIENTATIONS[a];this._PostToDOMMaybeSync("lock-orientation",{"orientation":b})}},UnlockOrientation(){this._PostToDOMMaybeSync("unlock-orientation")},LoadStyleSheet(a){this._runtime.GetAssetManager().LoadStyleSheet(a)},SetHash(a){this.PostToDOM("set-hash",{"hash":a})}}}
 
-"use strict";C3.Behaviors.solid.Exps={};
+'use strict';C3.Plugins.Browser.Exps={URL(){return this._runtime.IsInWorker()?this._initLocationStr:location.toString()},Protocol(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).protocol:location.protocol},Domain(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).hostname:location.hostname},Port(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).port:location.port},PathName(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).pathname:location.pathname},Hash(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).hash:location.hash},QueryString(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).search:location.search},QueryParam(a){const b=this._runtime.IsInWorker()?new URL(this._initLocationStr).search:location.search,c=RegExp('[?&]'+a+'=([^&]*)').exec(b);return c?decodeURIComponent(c[1].replace(/\+/g,' ')):''},Referrer(){return this._referrer},Title(){return this._docTitle},Language(){return navigator.language},Platform(){return navigator.platform},UserAgent(){return navigator.userAgent},ExecJS(jsStr){let result=0;try{result=eval(jsStr)}catch(a){console.error('Error executing JavaScript: ',a)}return'number'==typeof result||'string'==typeof result?result:'boolean'==typeof result?result?1:0:0},Name(){return navigator.appName},Version(){return navigator.appVersion},Product(){return navigator.product},Vendor(){return navigator.vendor},BatteryLevel(){return 1},BatteryTimeLeft(){return 1/0},Bandwidth(){const a=navigator['connection'];return a?a['downlink']||a['downlinkMax']||a['bandwidth']||1/0:1/0},ConnectionType(){const a=navigator['connection'];return a?a['type']||'unknown':'unknown'},DevicePixelRatio(){return self.devicePixelRatio},ScreenWidth(){return this._screenWidth},ScreenHeight(){return this._screenHeight},WindowInnerWidth(){return this._runtime.GetCanvasManager().GetLastWidth()},WindowInnerHeight(){return this._runtime.GetCanvasManager().GetLastHeight()},WindowOuterWidth(){return this._windowOuterWidth},WindowOuterHeight(){return this._windowOuterWidth}};
 
-"use strict";C3.Behaviors.Bullet=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
+"use strict";C3.Behaviors.EightDir=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
 
-"use strict";C3.Behaviors.Bullet.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
+"use strict";C3.Behaviors.EightDir.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
 
-"use strict";{C3.Behaviors.Bullet.Instance=class extends C3.SDKBehaviorInstanceBase{constructor(b,c){var d=Math.abs;super(b);const e=this.GetWorldInfo();this._speed=0,this._acc=0,this._g=0,this._bounceOffSolid=!1,this._setAngle=!1,this._isStepping=!1,this._isEnabled=!0,this._dx=0,this._dy=0,this._lastX=e.GetX(),this._lastY=e.GetY(),this._lastKnownAngle=e.GetAngle(),this._travelled=0,this._stepSize=Math.min(d(e.GetWidth()),d(e.GetHeight())/2),this._stopStepping=!1,c&&(this._speed=c[0],this._acc=c[1],this._g=c[2],this._bounceOffSolid=!!c[3],this._setAngle=!!c[4],this._isStepping=!!c[5],this._isEnabled=!!c[6]);const f=e.GetAngle();this._dx=Math.cos(f)*this._speed,this._dy=Math.sin(f)*this._speed,this._isEnabled&&(this._StartTicking(),this._bounceOffSolid&&this._StartPostTicking())}Release(){super.Release()}SaveToJson(){const a={"dx":this._dx,"dy":this._dy,"lx":this._lastX,"ly":this._lastY,"lka":this._lastKnownAngle,"t":this._travelled};return 0!==this._acc&&(a["acc"]=this._acc),0!==this._g&&(a["g"]=this._g),this._isStepping&&(a["st"]=this._isStepping),this._isEnabled||(a["e"]=this._isEnabled),this._bounceOffSolid&&(a["bos"]=this._bounceOffSolid),this._setAngle&&(a["sa"]=this._setAngle),a}LoadFromJson(a){this._dx=a["dx"],this._dy=a["dy"],this._lastX=a["lx"],this._lastY=a["ly"],this._lastKnownAngle=a["lka"],this._travelled=a["t"],this._acc=a.hasOwnProperty("acc")?a["acc"]:0,this._g=a.hasOwnProperty("g")?a["g"]:0,this._isStepping=!!a.hasOwnProperty("st")&&a["st"],this._bounceOffSolid=!!a.hasOwnProperty("bos")&&a["bos"],this._setAngle=!!a.hasOwnProperty("sa")&&a["sa"],this._SetEnabled(!a.hasOwnProperty("e")||a["e"])}Tick(){var b=Math.sin,c=Math.cos;if(!this._isEnabled)return;const d=this._runtime.GetDt(this._inst),e=this._inst.GetWorldInfo();if(e.GetAngle()!==this._lastKnownAngle){const a=e.GetAngle();if(this._setAngle){const d=C3.distanceTo(0,0,this._dx,this._dy);this._dx=c(a)*d,this._dy=b(a)*d}this._lastKnownAngle=a}let f=0,g=0;if(0!==this._acc){let h=C3.distanceTo(0,0,this._dx,this._dy),i=0;i=0===this._dx&&0===this._dy?e.GetAngle():C3.angleTo(0,0,this._dx,this._dy),h+=this._acc*d,f=c(i)*this._acc,g=b(i)*this._acc,0>h&&(h=0,f=0,g=0),this._dx=c(i)*h,this._dy=b(i)*h}if(0!==this._g&&(this._dy+=this._g*d,g+=this._g),this._lastX=e.GetX(),this._lastY=e.GetY(),0!==this._dx||0!==this._dy){const b=this._dx*d+.5*f*d*d,c=this._dy*d+.5*g*d*d,a=C3.distanceTo(0,0,b,c);if(this._MoveBy(b,c,a),this._travelled+=a,this._setAngle&&(0!=b||0!=c)){const d=C3.angleTo(0,0,b,c);e.SetAngle(d),this._lastKnownAngle=e.GetAngle()}e.SetBboxChanged()}}_MoveBy(b,c,d){const e=this.GetWorldInfo();if(!this._isStepping||d<=this._stepSize)return e.OffsetXY(b,c),e.SetBboxChanged(),void(this._isStepping&&this.Trigger(C3.Behaviors.Bullet.Cnds.OnStep));this._stopStepping=!1;const f=e.GetX(),g=e.GetY(),h=C3.angleTo(0,0,b,c),a=Math.cos(h)*this._stepSize,j=Math.sin(h)*this._stepSize,k=Math.floor(d/this._stepSize);for(let h=1;h<=k;++h)if(e.SetXY(f+a*h,g+j*h),e.SetBboxChanged(),this.Trigger(C3.Behaviors.Bullet.Cnds.OnStep),this._inst.IsDestroyed()||this._stopStepping)return;e.SetXY(f+b,g+c),e.SetBboxChanged(),this.Trigger(C3.Behaviors.Bullet.Cnds.OnStep)}PostTick(){if(this._isEnabled&&this._bounceOffSolid&&(0!==this._dx||0!==this._dy)){const a=this._runtime.GetDt(this._inst),b=this._inst.GetWorldInfo(),c=this._runtime.GetCollisionEngine(),d=c.TestOverlapSolid(this._inst);if(d){c.RegisterCollision(this._inst,d);const e=C3.distanceTo(0,0,this._dx,this._dy),f=c.CalculateBounceAngle(this._inst,this._lastX,this._lastY);this._dx=Math.cos(f)*e,this._dy=Math.sin(f)*e,b.OffsetXY(this._dx*a,this._dy*a),b.SetBboxChanged(),this._setAngle&&(b.SetAngle(f),this._lastKnownAngle=b.GetAngle(),b.SetBboxChanged()),c.PushOutSolid(this._inst,this._dx/e,this._dy/e,Math.max(2.5*e*a,30))||c.PushOutSolidNearest(this._inst,100)}}}GetPropertyValueByIndex(a){return a===0?this._GetSpeed():1===a?this._GetAcceleration():2===a?this._GetGravity():4===a?this._setAngle:5===a?this._isStepping:6===a?this._IsEnabled():void 0}SetPropertyValueByIndex(a,b){a===0?this._SetSpeed(b):1===a?this._acc=b:2===a?this._g=b:4===a?this._setAngle=!!b:5===a?this._isStepping=!!b:6===a?this._SetEnabled(!!b):void 0}_SetSpeed(b){const c=C3.angleTo(0,0,this._dx,this._dy);this._dx=Math.cos(c)*b,this._dy=Math.sin(c)*b}_GetSpeed(){return C3.round6dp(C3.distanceTo(0,0,this._dx,this._dy))}_SetAcceleration(b){this._acc=b}_GetAcceleration(){return this._acc}_SetGravity(a){this._g=a}_GetGravity(){return this._g}_SetAngleOfMotion(b){const a=C3.distanceTo(0,0,this._dx,this._dy);this._dx=Math.cos(b)*a,this._dy=Math.sin(b)*a}_GetAngleOfMotion(){return C3.angleTo(0,0,this._dx,this._dy)}_SetBounceOffSolids(a){a=!!a;this._bounceOffSolid===a||(this._bounceOffSolid=a,this._isEnabled&&(this._bounceOffSolid?this._StartPostTicking():this._StopPostTicking()))}_IsBounceOffSolids(){return this._bounceOffSolid}_SetDistanceTravelled(a){this._travelled=a}_GetDistanceTravelled(){return this._travelled}_SetEnabled(a){this._isEnabled=!!a,this._isEnabled?(this._StartTicking(),this._bounceOffSolid&&this._StartPostTicking()):(this._StopTicking(),this._StopPostTicking())}_IsEnabled(){return this._isEnabled}GetDebuggerProperties(){return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:"behaviors.bullet.debugger.vector-x",value:this._dx,onedit:(a)=>this._dx=a},{name:"behaviors.bullet.debugger.vector-y",value:this._dy,onedit:(a)=>this._dy=a},{name:"behaviors.bullet.properties.speed.name",value:this._GetSpeed(),onedit:(a)=>this._SetSpeed(a)},{name:"behaviors.bullet.debugger.angle-of-motion",value:C3.toDegrees(this._GetAngleOfMotion())},{name:"behaviors.bullet.properties.gravity.name",value:this._GetGravity(),onedit:(a)=>this._SetGravity(a)},{name:"behaviors.bullet.properties.acceleration.name",value:this._GetAcceleration(),onedit:(a)=>this._SetAcceleration(a)},{name:"behaviors.bullet.debugger.distance-travelled",value:this._GetDistanceTravelled()},{name:"behaviors.bullet.properties.enabled.name",value:this._IsEnabled(),onedit:(a)=>this._SetEnabled(a)}]}]}GetScriptInterfaceClass(){return IBulletBehaviorInstance}};const c=new WeakMap;self.IBulletBehaviorInstance=class extends IBehaviorInstance{constructor(){super(),c.set(this,IBehaviorInstance._GetInitInst().GetSdkInstance())}get speed(){return c.get(this)._GetSpeed()}set speed(a){c.get(this)._SetSpeed(a)}get acceleration(){return c.get(this)._GetAcceleration()}set acceleration(b){c.get(this)._SetAcceleration(b)}get gravity(){return c.get(this)._GetGravity()}set gravity(a){c.get(this)._SetGravity(a)}get angleOfMotion(){return c.get(this)._GetAngleOfMotion()}set angleOfMotion(b){c.get(this)._SetAngleOfMotion(b)}get bounceOffSolids(){return c.get(this)._IsBounceOffSolids()}set bounceOffSolids(a){c.get(this)._SetBounceOffSolids(!!a)}get distanceTravelled(){return c.get(this)._GetDistanceTravelled()}set distanceTravelled(a){c.get(this)._SetDistanceTravelled(a)}get isEnabled(){return c.get(this)._IsEnabled()}set isEnabled(a){c.get(this)._SetEnabled(a)}}}
+"use strict";{C3.Behaviors.EightDir.Instance=class extends C3.SDKBehaviorInstanceBase{constructor(a,b){super(a),this._upKey=!1,this._downKey=!1,this._leftKey=!1,this._rightKey=!1,this._ignoreInput=!1,this._simUp=!1,this._simDown=!1,this._simLeft=!1,this._simRight=!1,this._dx=0,this._dy=0,this._maxSpeed=200,this._acc=600,this._dec=500,this._directions=3,this._angleMode=3,this._defaultControls=!0,this._isEnabled=!0,b&&(this._maxSpeed=b[0],this._acc=b[1],this._dec=b[2],this._directions=b[3],this._angleMode=b[4],this._defaultControls=!!b[5],this._isEnabled=!!b[6]),this._isEnabled&&this._StartTicking(),this._defaultControls&&this._BindEvents()}_BindEvents(){if(!this._disposables){const a=this._runtime.Dispatcher();this._disposables=new C3.CompositeDisposable(C3.Disposable.From(a,"keydown",(a)=>this._OnKeyDown(a.data)),C3.Disposable.From(a,"keyup",(a)=>this._OnKeyUp(a.data)),C3.Disposable.From(a,"window-blur",()=>this._OnWindowBlur()))}}_UnBindEvents(){this._disposables&&(this._disposables.Release(),this._disposables=null)}Release(){super.Release()}SaveToJson(){return{"dx":this._dx,"dy":this._dy,"e":this._isEnabled,"ms":this._maxSpeed,"acc":this._acc,"dec":this._dec,"d":this._directions,"am":this._angleMode,"dc":this._defaultControls,"ii":this._ignoreInput}}LoadFromJson(a){this._dx=a["dx"],this._dy=a["dy"],this._SetEnabled(a["e"]),this._maxSpeed=a["ms"],this._acc=a["acc"],this._dec=a["dec"],this._directions=a["d"],this._angleMode=a["am"],this._defaultControls=a["dc"],this._ignoreInput=a["ii"],this._upKey=!1,this._downKey=!1,this._leftKey=!1,this._rightKey=!1,this._simUp=!1,this._simDown=!1,this._simLeft=!1,this._simRight=!1,this._defaultControls?this._BindEvents():this._UnBindEvents()}_OnKeyDown(a){switch(a["key"]){case"ArrowLeft":this._leftKey=!0;break;case"ArrowUp":this._upKey=!0;break;case"ArrowRight":this._rightKey=!0;break;case"ArrowDown":this._downKey=!0;}}_OnKeyUp(a){switch(a["key"]){case"ArrowLeft":this._leftKey=!1;break;case"ArrowUp":this._upKey=!1;break;case"ArrowRight":this._rightKey=!1;break;case"ArrowDown":this._downKey=!1;}}_OnWindowBlur(){this._upKey=!1,this._downKey=!1,this._leftKey=!1,this._rightKey=!1}Tick(){var b=Math.round,c=Math.floor,d=Math.abs,e=Math.atan2,f=Math.max,a=Math.min;const g=this._runtime.GetDt(this._inst),h=this._runtime.GetCollisionEngine();let i=this._leftKey||this._simLeft,j=this._rightKey||this._simRight,k=this._upKey||this._simUp,l=this._downKey||this._simDown;if(this._simLeft=!1,this._simRight=!1,this._simUp=!1,this._simDown=!1,!this._isEnabled)return;let m=h.TestOverlapSolid(this._inst);if(m&&(h.RegisterCollision(this._inst,m),!h.PushOutSolidNearest(this._inst)))return;this._ignoreInput&&(i=j=k=l=!1),0===this._directions?i=j=!1:1===this._directions&&(k=l=!1),2===this._directions&&(k||l)&&(i=j=!1),i===j&&(0>this._dx?this._dx=a(this._dx+this._dec*g,0):0<this._dx&&(this._dx=f(this._dx-this._dec*g,0))),k===l&&(0>this._dy?this._dy=a(this._dy+this._dec*g,0):0<this._dy&&(this._dy=f(this._dy-this._dec*g,0)));let n=0,o=0;if(i&&!j&&(0<this._dx?n=-(this._acc+this._dec):n=-this._acc),j&&!i&&(0>this._dx?n=this._acc+this._dec:n=this._acc),k&&!l&&(0<this._dy?o=-(this._acc+this._dec):o=-this._acc),l&&!k&&(0>this._dy?o=this._acc+this._dec:o=this._acc),this._dx+=n*g,this._dy+=o*g,0!==this._dx||0!==this._dy){const i=Math.sqrt(this._dx*this._dx+this._dy*this._dy),j=e(this._dy,this._dx),a=this._maxSpeed*Math.cos(j),k=this._maxSpeed*Math.sin(j);i>this._maxSpeed&&(this._dx=a,this._dy=k);const l=d(a)*g,p=d(k)*g,q=this._inst.GetWorldInfo(),r=q.GetX(),s=q.GetY(),t=q.GetAngle(),u=C3.clamp(this._dx*g+.5*n*g*g,-l,l);q.OffsetX(u),q.SetBboxChanged(),m=h.TestOverlapSolid(this._inst),m&&(!h.PushOutSolid(this._inst,0>this._dx?1:-1,0,f(d(c(u)),1))&&(q.SetX(r),q.SetBboxChanged()),this._dx=0,h.RegisterCollision(this._inst,m));const v=C3.clamp(this._dy*g+.5*o*g*g,-p,p);q.OffsetY(v),q.SetBboxChanged(),m=h.TestOverlapSolid(this._inst),m&&(!h.PushOutSolid(this._inst,0,0>this._dy?1:-1,f(d(c(v)),1))&&(q.SetY(s),q.SetBboxChanged()),this._dy=0,h.RegisterCollision(this._inst,m));const w=C3.round6dp(this._dx),x=C3.round6dp(this._dy);(0!==w||0!==x)&&this._inst.GetPlugin().IsRotatable()&&(1===this._angleMode?q.SetAngle(C3.toRadians(90*b(C3.toDegrees(e(x,w))/90))):2===this._angleMode?q.SetAngle(C3.toRadians(45*b(C3.toDegrees(e(x,w))/45))):3===this._angleMode&&q.SetAngle(e(x,w))),q.SetBboxChanged(),q.GetAngle()!=t&&(m=h.TestOverlapSolid(this._inst),m&&(q.SetAngle(t),q.SetBboxChanged(),h.RegisterCollision(this._inst,m)))}}GetPropertyValueByIndex(a){return a===0?this._GetMaxSpeed():1===a?this._GetAcceleration():2===a?this._GetDeceleration():3===a?this._directions:4===a?this._angleMode:5===a?this._IsDefaultControls():6===a?this._IsEnabled():void 0}SetPropertyValueByIndex(a,b){a===0?this._SetMaxSpeed(b):1===a?this._SetAcceleration(b):2===a?this._SetDeceleration(b):3===a?this._directions=b:4===a?this._angleMode=b:5===a?this._SetDefaultControls(!!b):6===a?this._SetEnabled(!!b):void 0}_Stop(){this._dx=0,this._dy=0}_Reverse(){this._dx*=-1,this._dy*=-1}_MaybeClampSpeed(){const a=Math.hypot(this._dx,this._dy);a>this._maxSpeed&&this._SetSpeed(a)}_SetSpeed(b){b=C3.clamp(b,0,this._maxSpeed);const c=Math.atan2(this._dy,this._dx);this._dx=b*Math.cos(c),this._dy=b*Math.sin(c)}_GetSpeed(){return Math.hypot(this._dx,this._dy)}_SetMaxSpeed(a){this._maxSpeed=Math.max(a,0)}_GetMaxSpeed(){return this._maxSpeed}_SetAcceleration(a){this._acc=Math.max(a,0)}_GetAcceleration(){return this._acc}_SetDeceleration(a){this._dec=Math.max(a,0)}_GetDeceleration(){return this._dec}_GetMovingAngle(){return Math.atan2(this._dy,this._dx)}_SetVectorX(a){this._dx=a,this._MaybeClampSpeed()}_GetVectorX(){return this._dx}_SetVectorY(a){this._dy=a,this._MaybeClampSpeed()}_GetVectorY(){return this._dy}_SimulateControl(a){this._isEnabled&&(0===a?this._simLeft=!0:1===a?this._simRight=!0:2===a?this._simUp=!0:3===a?this._simDown=!0:void 0)}_SetDefaultControls(a){a=!!a;this._defaultControls===a||(this._defaultControls=a,this._defaultControls?this._BindEvents():(this._UnBindEvents(),this._OnWindowBlur()))}_IsDefaultControls(){return this._defaultControls}_SetIgnoreInput(a){this._ignoreInput=!!a}_IsIgnoreInput(){return this._ignoreInput}_SetEnabled(a){this._isEnabled=!!a,this._isEnabled?this._StartTicking():(this._simLeft=!1,this._simRight=!1,this._simUp=!1,this._simDown=!1,this._StopTicking())}_IsEnabled(){return this._isEnabled}GetDebuggerProperties(){return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:"behaviors.eightdir.debugger.vector-x",value:this._GetVectorX(),onedit:(a)=>this._SetVectorX(a)},{name:"behaviors.eightdir.debugger.vector-y",value:this._GetVectorY(),onedit:(a)=>this._SetVectorY(a)},{name:"behaviors.eightdir.debugger.speed",value:this._GetSpeed(),onedit:(a)=>this._SetSpeed(a)},{name:"behaviors.eightdir.debugger.angle-of-motion",value:C3.toDegrees(this._GetMovingAngle())},{name:"behaviors.eightdir.properties.max-speed.name",value:this._GetMaxSpeed(),onedit:(a)=>this._SetMaxSpeed(a)},{name:"behaviors.eightdir.properties.acceleration.name",value:this._GetAcceleration(),onedit:(a)=>this._SetAcceleration(a)},{name:"behaviors.eightdir.properties.deceleration.name",value:this._GetDeceleration(),onedit:(a)=>this._SetDeceleration(a)},{name:"behaviors.eightdir.properties.enabled.name",value:this._IsEnabled(),onedit:(a)=>this._SetEnabled(a)}]}]}GetScriptInterfaceClass(){return I8DirectionBehaviorInstance}};const b=new WeakMap,a=new Map([["left",0],["right",1],["up",2],["down",3]]);self.I8DirectionBehaviorInstance=class extends IBehaviorInstance{constructor(){super(),b.set(this,IBehaviorInstance._GetInitInst().GetSdkInstance())}stop(){b.get(this)._Stop()}reverse(){b.get(this)._Reverse()}simulateControl(c){const d=a.get(c);if("number"!=typeof d)throw new Error("invalid control");b.get(this)._SimulateControl(d)}get speed(){return b.get(this)._GetSpeed()}set speed(a){b.get(this)._SetSpeed(a)}get maxSpeed(){return b.get(this)._GetMaxSpeed()}set maxSpeed(a){b.get(this)._SetMaxSpeed(a)}get acceleration(){return b.get(this)._GetAcceleration()}set acceleration(c){b.get(this)._SetAcceleration(c)}get deceleration(){return b.get(this)._GetDeceleration()}set deceleration(a){b.get(this)._GetDeceleration(a)}get vectorX(){return b.get(this)._GetVectorX()}set vectorX(a){b.get(this)._SetVectorX(a)}get vectorY(){return b.get(this)._GetVectorY()}set vectorY(a){b.get(this)._SetVectorX(a)}get isDefaultControls(){return b.get(this)._IsDefaultControls()}set isDefaultControls(a){b.get(this)._SetDefaultControls(!!a)}get isIgnoringInput(){return b.get(this)._IsIgnoreInput()}set isIgnoringInput(a){b.get(this)._SetIgnoreInput(!!a)}get isEnabled(){return b.get(this)._IsEnabled()}set isEnabled(a){b.get(this)._SetEnabled(!!a)}}}
 
-"use strict";C3.Behaviors.Bullet.Cnds={CompareSpeed(a,b){const c=Math.sqrt(this._dx*this._dx+this._dy*this._dy);return C3.compare(c,a,b)},CompareTravelled(a,b){return C3.compare(this._GetDistanceTravelled(),a,b)},OnStep(){return!0},IsEnabled(){return this._IsEnabled()}};
+"use strict";C3.Behaviors.EightDir.Cnds={IsMoving(){return 1e-10<this._GetSpeed()},CompareSpeed(a,b){return C3.compare(this._GetSpeed(),a,b)},IsEnabled(){return this._IsEnabled()}};
 
-"use strict";C3.Behaviors.Bullet.Acts={SetSpeed(a){this._SetSpeed(a)},SetAcceleration(b){this._SetAcceleration(b)},SetGravity(a){this._SetGravity(a)},SetAngleOfMotion(b){this._SetAngleOfMotion(C3.toRadians(b))},Bounce(a){var b=Math.max;if(a){const c=a.GetFirstPicked(this._inst);if(c){const a=this._inst.GetWorldInfo(),d=this._runtime.GetCollisionEngine(),e=this._runtime.GetDt(this._inst),f=C3.distanceTo(0,0,this._dx,this._dy),g=d.CalculateBounceAngle(this._inst,this._lastX,this._lastY,c);this._dx=Math.cos(g)*f,this._dy=Math.sin(g)*f,a.OffsetXY(this._dx*e,this._dy*e),a.SetBboxChanged(),this._setAngle&&(a.SetAngle(g),this._lastKnownAngle=a.GetAngle(),a.SetBboxChanged()),0!==f&&(this._bounceOffSolid?!d.PushOutSolid(this._inst,this._dx/f,this._dy/f,b(2.5*f*e,30))&&d.PushOutSolidNearest(this._inst,100):d.PushOut(this._inst,this._dx/f,this._dy/f,b(2.5*f*e,30),c))}}},SetBounceOffSolids(a){this._SetBounceOffSolids(a)},SetDistanceTravelled(a){this._SetDistanceTravelled(a)},SetEnabled(a){this._SetEnabled(a)},StopStepping(){this._stopStepping=!0}};
+"use strict";C3.Behaviors.EightDir.Acts={Stop(){this._Stop()},Reverse(){this._Reverse()},SetIgnoreInput(a){this._SetIgnoreInput(a)},SetSpeed(a){this._SetSpeed(a)},SetMaxSpeed(a){this._SetMaxSpeed(a)},SetAcceleration(a){this._SetAcceleration(a)},SetDeceleration(a){this._SetDeceleration(a)},SimulateControl(a){this._SimulateControl(a)},SetEnabled(a){this._SetEnabled(a)},SetVectorX(a){this._SetVectorX(a)},SetVectorY(a){this._SetVectorY(a)},SetDefaultControls(a){this._SetDefaultControls(!!a)}};
 
-"use strict";C3.Behaviors.Bullet.Exps={Speed(){return this._GetSpeed()},Acceleration(){return this._GetAcceleration()},AngleOfMotion(){return C3.toDegrees(this._GetAngleOfMotion())},DistanceTravelled(){return this._GetDistanceTravelled()},Gravity(){return this._GetGravity()}};
+"use strict";C3.Behaviors.EightDir.Exps={Speed(){return this._GetSpeed()},MaxSpeed(){return this._GetMaxSpeed()},Acceleration(){return this._GetAcceleration()},Deceleration(){return this._GetDeceleration()},MovingAngle(){return C3.toDegrees(this._GetMovingAngle())},VectorX(){return this._GetVectorX()},VectorY(){return this._GetVectorY()}};
+
+"use strict";C3.Behaviors.bound=class extends C3.SDKBehaviorBase{constructor(a){super(a)}Release(){super.Release()}};
+
+"use strict";C3.Behaviors.bound.Type=class extends C3.SDKBehaviorTypeBase{constructor(a){super(a)}Release(){super.Release()}OnCreate(){}};
+
+"use strict";{C3.Behaviors.bound.Instance=class extends C3.SDKBehaviorInstanceBase{constructor(a,b){super(a),this._mode=0,b&&(this._mode=b[0]),this._StartTicking2()}Release(){super.Release()}SaveToJson(){return{"m":this._mode}}LoadFromJson(a){this._mode=a["m"]}Tick2(){const a=this._inst.GetWorldInfo(),b=a.GetBoundingBox(),c=a.GetLayout();let d=!1;0===this._mode?(0>a.GetX()&&(a.SetX(0),d=!0),0>a.GetY()&&(a.SetY(0),d=!0),a.GetX()>c.GetWidth()&&(a.SetX(c.GetWidth()),d=!0),a.GetY()>c.GetHeight()&&(a.SetY(c.GetHeight()),d=!0)):(0>b.getLeft()&&(a.OffsetX(-b.getLeft()),d=!0),0>b.getTop()&&(a.OffsetY(-b.getTop()),d=!0),b.getRight()>c.GetWidth()&&(a.OffsetX(-(b.getRight()-c.GetWidth())),d=!0),b.getBottom()>c.GetHeight()&&(a.OffsetY(-(b.getBottom()-c.GetHeight())),d=!0)),d&&a.SetBboxChanged()}GetPropertyValueByIndex(a){return a===0?this._mode:void 0}SetPropertyValueByIndex(a,b){a===0?this._mode=b:void 0}}}
+
+"use strict";C3.Behaviors.bound.Cnds={};
+
+"use strict";C3.Behaviors.bound.Acts={};
+
+"use strict";C3.Behaviors.bound.Exps={};
 
 "use strict"
 self.C3_GetObjectRefTable = function () {
@@ -627,13 +627,13 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Text,
 		C3.Plugins.TextBox,
 		C3.Plugins.Sprite,
-		C3.Behaviors.solid,
+		C3.Behaviors.EightDir,
+		C3.Behaviors.bound,
 		C3.Plugins.Arr,
-		C3.Behaviors.Bullet,
-		C3.Plugins.TiledBg,
 		C3.Plugins.Multiplayer,
 		C3.Plugins.Mouse,
 		C3.Plugins.Keyboard,
+		C3.Plugins.Browser,
 		C3.Plugins.System.Cnds.IsGroupActive,
 		C3.Plugins.Arr.Acts.Push,
 		C3.Plugins.Arr.Cnds.CompareSize,
@@ -652,21 +652,22 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Multiplayer.Cnds.OnSignallingLoggedIn,
 		C3.Plugins.Multiplayer.Exps.MyAlias,
 		C3.Plugins.Multiplayer.Exps.MyID,
-		C3.Plugins.Multiplayer.Acts.SignallingAutoJoinRoom,
+		C3.Plugins.Multiplayer.Acts.SignallingJoinRoom,
 		C3.Plugins.Multiplayer.Cnds.OnSignallingJoinedRoom,
 		C3.Plugins.Multiplayer.Cnds.IsHost,
 		C3.Plugins.System.Acts.SetGroupActive,
+		C3.Plugins.Text.Acts.SetVisible,
 		C3.Plugins.Sprite.Acts.SetInstanceVar,
 		C3.Plugins.Multiplayer.Acts.AssociateObjectWithPeer,
 		C3.Plugins.System.Cnds.Else,
 		C3.Plugins.Sprite.Acts.Destroy,
-		C3.Plugins.System.Acts.SetVar,
 		C3.Plugins.Multiplayer.Cnds.OnSignallingDisconnected,
 		C3.Plugins.Multiplayer.Cnds.OnSignallingError,
 		C3.Plugins.Multiplayer.Exps.ErrorMessage,
 		C3.Plugins.Multiplayer.Cnds.OnSignallingLeftRoom,
 		C3.Plugins.Multiplayer.Cnds.OnSignallingKicked,
 		C3.Plugins.System.Cnds.EveryTick,
+		C3.Plugins.Multiplayer.Exps.PeerCount,
 		C3.Plugins.Multiplayer.Exps.StatInboundCount,
 		C3.Plugins.Multiplayer.Exps.StatInboundBandwidth,
 		C3.Plugins.Multiplayer.Exps.StatOutboundCount,
@@ -676,46 +677,70 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Multiplayer.Exps.PeerPDV,
 		C3.Plugins.Sprite.Cnds.OnCreated,
 		C3.Plugins.Multiplayer.Exps.PeerID,
+		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
+		C3.Plugins.Multiplayer.Acts.InputPredictObject,
 		C3.Plugins.Multiplayer.Cnds.OnClientUpdate,
 		C3.Plugins.Multiplayer.Acts.SetClientState,
-		C3.Plugins.Mouse.Exps.Y,
 		C3.Plugins.Mouse.Exps.X,
-		C3.Plugins.Multiplayer.Cnds.OnPeerMessage,
-		C3.Plugins.Multiplayer.Exps.Message,
+		C3.Plugins.Mouse.Exps.Y,
+		C3.Plugins.Keyboard.Cnds.IsKeyDown,
+		C3.Plugins.System.Exps.setbit,
+		C3.Plugins.Mouse.Cnds.IsButtonDown,
+		C3.Plugins.System.Cnds.Compare,
+		C3.Plugins.System.Exps.getbit,
+		C3.Behaviors.EightDir.Acts.SimulateControl,
 		C3.Plugins.Multiplayer.Cnds.OnPeerConnected,
 		C3.Plugins.System.Acts.CreateObject,
+		C3.Plugins.System.Exps.random,
 		C3.Plugins.System.Exps.layoutwidth,
 		C3.Plugins.System.Exps.layoutheight,
-		C3.Plugins.System.Acts.Wait,
-		C3.Behaviors.Bullet.Acts.SetEnabled,
-		C3.Behaviors.Bullet.Acts.SetAngleOfMotion,
-		C3.Plugins.System.Exps.random,
-		C3.Plugins.Multiplayer.Acts.HostBroadcastMessage,
-		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
-		C3.Plugins.Sprite.Acts.SetY,
+		C3.Plugins.System.Cnds.ForEach,
 		C3.Plugins.Multiplayer.Exps.PeerState,
-		C3.Plugins.Sprite.Cnds.OnCollision,
-		C3.Behaviors.Bullet.Acts.SetSpeed,
-		C3.Behaviors.Bullet.Exps.Speed,
-		C3.Plugins.Sprite.Cnds.CompareX,
-		C3.Plugins.System.Cnds.TriggerOnce,
-		C3.Plugins.Sprite.Acts.AddInstanceVar,
+		C3.Plugins.Sprite.Cnds.IsBoolInstanceVarSet,
+		C3.Plugins.Sprite.Acts.SetBoolInstanceVar,
+		C3.Plugins.Sprite.Exps.UID,
+		C3.Plugins.Sprite.Cnds.PickByUID,
+		C3.Plugins.System.Acts.SetVar,
+		C3.Plugins.Sprite.Exps.X,
+		C3.Plugins.Sprite.Exps.Y,
+		C3.Plugins.Sprite.Exps.Angle,
 		C3.Plugins.Sprite.Acts.SetPos,
+		C3.Plugins.Multiplayer.Exps.LagCompensateX,
+		C3.Plugins.Multiplayer.Exps.LagCompensateY,
+		C3.Plugins.Sprite.Acts.SetAngle,
+		C3.Plugins.Multiplayer.Exps.LagCompensateAngle,
+		C3.Plugins.Sprite.Cnds.IsOverlapping,
+		C3.Plugins.Sprite.Acts.SubInstanceVar,
+		C3.Plugins.Sprite.Acts.AddInstanceVar,
+		C3.Plugins.Multiplayer.Cnds.OnPeerMessage,
+		C3.Plugins.Multiplayer.Acts.HostBroadcastMessage,
+		C3.Plugins.Multiplayer.Exps.FromID,
+		C3.Plugins.Multiplayer.Exps.Message,
 		C3.Plugins.Multiplayer.Exps.PeerAlias,
 		C3.Plugins.Multiplayer.Cnds.OnPeerDisconnected,
-		C3.Plugins.Sprite.Acts.MoveToLayer,
-		C3.Plugins.System.Cnds.CompareVar,
-		C3.Plugins.Multiplayer.Exps.HostAlias,
+		C3.Plugins.Sprite.Acts.SetTowardPosition,
+		C3.Plugins.Text.Acts.SetPos,
 		C3.Plugins.Multiplayer.Exps.PeerAliasFromID,
+		C3.Plugins.Sprite.Acts.MoveToLayer,
+		C3.Plugins.Text.Acts.MoveToLayer,
+		C3.Plugins.Sprite.Acts.SetPosToObject,
+		C3.Plugins.Sprite.Acts.SetWidth,
+		C3.Plugins.Sprite.Acts.SetVisible,
+		C3.Plugins.Keyboard.Cnds.OnKey,
+		C3.Plugins.Button.Cnds.OnClicked,
+		C3.Plugins.TextBox.Cnds.CompareText,
+		C3.Plugins.TextBox.Exps.Text,
+		C3.Plugins.Multiplayer.Acts.SendPeerMessage,
+		C3.Plugins.TextBox.Acts.SetText,
+		C3.Plugins.Multiplayer.Exps.FromAlias,
+		C3.Plugins.Mouse.Cnds.OnClick,
+		C3.Plugins.TextBox.Acts.SetBlur,
+		C3.Plugins.Button.Acts.SetBlur,
 		C3.Plugins.TextBox.Acts.SetFocus,
 		C3.Plugins.Multiplayer.Cnds.IsSupported,
 		C3.Plugins.Text.Acts.SetFontColor,
 		C3.Plugins.TextBox.Cnds.OnTextChanged,
-		C3.Plugins.TextBox.Cnds.CompareText,
 		C3.Plugins.Button.Acts.SetEnabled,
-		C3.Plugins.Button.Cnds.OnClicked,
-		C3.Plugins.Keyboard.Cnds.OnKey,
-		C3.Plugins.TextBox.Exps.Text,
 		C3.Plugins.System.Acts.GoToLayout
 	];
 };
@@ -724,26 +749,42 @@ self.C3_JsPropNameTable = [
 	{Title: 0},
 	{NameTextBox: 0},
 	{FormLabel: 0},
+	{AimSpot: 0},
+	{HostIndicator: 0},
 	{NetStats: 0},
 	{peerid: 0},
-	{points: 0},
-	{Solid: 0},
-	{Paddle: 0},
+	{lookatx: 0},
+	{lookaty: 0},
+	{inputs: 0},
+	{health: 0},
+	{kills: 0},
+	{deaths: 0},
+	{FirstShot: 0},
+	{lasthitbypeerid: 0},
+	{"8Direction": 0},
+	{BoundToLayout: 0},
+	{Peer: 0},
+	{PeerLaser: 0},
+	{PeerName: 0},
 	{LogText: 0},
 	{LogMessages: 0},
-	{Bullet: 0},
-	{Ball: 0},
-	{Barrier: 0},
-	{ScoreDisplay: 0},
+	{ChatSend: 0},
+	{ChatTextBox: 0},
 	{Multiplayer: 0},
 	{Mouse: 0},
 	{Keyboard: 0},
+	{Browser: 0},
+	{AimSpotFamily: 0},
 	{GAME_NAME: 0},
 	{INSTANCE_NAME: 0},
 	{ROOM_NAME: 0},
-	{GameState: 0},
 	{message: 0},
-	{state: 0},
+	{alias: 0},
+	{OldX: 0},
+	{OldY: 0},
+	{OldAngle: 0},
+	{aimSpotUid: 0},
+	{firingPeerId: 0},
 	{MyUsername: 0}
 ];
 
@@ -854,8 +895,15 @@ self.C3_JsPropNameTable = [
 			const n0 = p._GetNode(0);
 			return () => and(n0.ExpObject(), "\n");
 		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			return () => ((("<" + v0.GetValue()) + "> ") + v1.GetValue());
+		},
 		() => "Signalling",
-		() => "y",
+		() => "lookx",
+		() => "looky",
+		() => "inputs",
 		() => "wss://multiplayer.scirra.com",
 		() => "Connected, logging in...",
 		p => {
@@ -863,11 +911,11 @@ self.C3_JsPropNameTable = [
 			const f1 = p._GetNode(1).GetBoundMethod();
 			return () => (((((("Logged in with alias: " + f0()) + " (") + f1()) + ")") + "\n") + "Joining room...");
 		},
-		() => "scirra-pong",
+		() => "scirra-gametutorial3",
 		() => "default",
-		() => "game",
-		() => 2,
-		() => "Joined room as host, waiting for peer...",
+		() => "main",
+		() => 0,
+		() => "Joined room as host",
 		() => "Host",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -876,7 +924,6 @@ self.C3_JsPropNameTable = [
 		() => "Joined room as peer",
 		() => "Peer",
 		() => "Attempting to establish connection to host...",
-		() => "getready",
 		() => "Signalling disconnected",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -893,43 +940,123 @@ self.C3_JsPropNameTable = [
 			const f5 = p._GetNode(5).GetBoundMethod();
 			const f6 = p._GetNode(6).GetBoundMethod();
 			const f7 = p._GetNode(7).GetBoundMethod();
-			return () => and((and((((and((and(((and(and(f0(), " in ("), (Math.round((f1() / 100)) / 10)) + " k) / sec") + "\n"), f2()) + " out ("), (Math.round((f3() / 100)) / 10)) + " k) / sec") + "\n") + "Host ping "), Math.round(f4(f5()))) + ", PDV "), Math.round(f6(f7())));
+			const f8 = p._GetNode(8).GetBoundMethod();
+			return () => and((and((((and((and(((and((and((and(f0(), " peers connected") + "\n"), f1()) + " in ("), (Math.round((f2() / 100)) / 10)) + " k) / sec") + "\n"), f3()) + " out ("), (Math.round((f4() / 100)) / 10)) + " k) / sec") + "\n") + "Host ping "), Math.round(f5(f6()))) + ", PDV "), Math.round(f7(f8())));
 		},
 		() => "Game",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0("Game");
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 0, 1);
 		},
-		() => "x",
-		() => "gamestate-changed",
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0() - 38);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0() / 2);
-		},
-		() => 3,
-		() => "go",
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(360);
-		},
-		() => 1,
-		() => "started",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpInstVar(), "y");
+			return () => f0(n1.ExpInstVar(), 0, 0);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 1, 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 1, 0);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 2, 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 2, 0);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 3, 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 3, 0);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 4, 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 4, 0);
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => (n0.ExpBehavior() + 50);
+			return () => n0.ExpInstVar();
 		},
-		() => 0,
-		() => 300,
-		() => 200,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 0);
+		},
+		() => 1,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 1);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 2);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 3);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => f0(50, (f1() - 50));
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), "lookx");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), "looky");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), "inputs");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => f0(n1.ExpInstVar(), 4);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => n0.ExpObject();
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			const v2 = p._GetNode(2).GetVar();
+			return () => f0(n1.ExpInstVar(), v2.GetValue());
+		},
+		() => 3,
+		() => 100,
+		() => "chat",
 		() => "Common",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -939,25 +1066,29 @@ self.C3_JsPropNameTable = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (("'" + f0()) + "' left");
 		},
-		() => "Get ready...",
-		() => "GO!",
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 55);
+		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
-			return () => (and((f0() + " "), n1.ExpInstVar()) + " - ");
+			const n2 = p._GetNode(2);
+			const n3 = p._GetNode(3);
+			const n4 = p._GetNode(4);
+			return () => (and((and(((and((f0(n1.ExpInstVar()) + " ("), n2.ExpInstVar()) + "%)") + "\n"), n3.ExpInstVar()) + " kills, "), n4.ExpInstVar()) + " deaths");
 		},
+		() => "Lasers",
+		() => "Info",
 		p => {
 			const n0 = p._GetNode(0);
-			const f1 = p._GetNode(1).GetBoundMethod();
+			const n1 = p._GetNode(1);
 			const n2 = p._GetNode(2);
-			return () => (and(n0.ExpInstVar(), " ") + f1(n2.ExpInstVar()));
+			const n3 = p._GetNode(3);
+			return () => C3.distanceTo(n0.ExpObject(), n1.ExpObject(), n2.ExpInstVar(), n3.ExpInstVar());
 		},
 		() => "Multiplayer not supported",
-		() => 255,
-		p => {
-			const n0 = p._GetNode(0);
-			return () => n0.ExpObject();
-		}
+		() => 255
 	];
 }
 
