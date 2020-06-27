@@ -679,6 +679,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Multiplayer.Cnds.OnClientUpdate,
 		C3.Plugins.Multiplayer.Acts.SetClientState,
 		C3.Plugins.Mouse.Exps.Y,
+		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Multiplayer.Cnds.OnPeerMessage,
 		C3.Plugins.Multiplayer.Exps.Message,
 		C3.Plugins.Multiplayer.Cnds.OnPeerConnected,
@@ -702,7 +703,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.Multiplayer.Exps.PeerAlias,
 		C3.Plugins.Multiplayer.Cnds.OnPeerDisconnected,
-		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Sprite.Acts.MoveToLayer,
 		C3.Plugins.System.Cnds.CompareVar,
 		C3.Plugins.Multiplayer.Exps.HostAlias,
@@ -900,6 +900,7 @@ self.C3_JsPropNameTable = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("Game");
 		},
+		() => "x",
 		() => "gamestate-changed",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -924,11 +925,11 @@ self.C3_JsPropNameTable = [
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => (n0.ExpBehavior() + 900);
+			return () => (n0.ExpBehavior() + 50);
 		},
 		() => 0,
 		() => 300,
-		() => 900,
+		() => 200,
 		() => "Common",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
