@@ -702,6 +702,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetPos,
 		C3.Plugins.Multiplayer.Exps.PeerAlias,
 		C3.Plugins.Multiplayer.Cnds.OnPeerDisconnected,
+		C3.Plugins.Mouse.Exps.X,
 		C3.Plugins.Sprite.Acts.MoveToLayer,
 		C3.Plugins.System.Cnds.CompareVar,
 		C3.Plugins.Multiplayer.Exps.HostAlias,
