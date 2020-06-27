@@ -923,10 +923,11 @@ self.C3_JsPropNameTable = [
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => (n0.ExpBehavior() + 30);
+			return () => (n0.ExpBehavior() + 900);
 		},
 		() => 0,
 		() => 300,
+		() => 900,
 		() => "Common",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
